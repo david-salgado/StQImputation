@@ -8,9 +8,10 @@
 #' @return Object of the same class as the input \code{object} with the missing values imputed
 #' according to the method specified in the input argument \code{Param}
 #'
-#'
 #' @examples
 #' \dontrun{}
+#'
+#' @export
 setGeneric("Impute", function(object, Param) {standardGeneric("Impute")})
 
 #' @rdname Impute
@@ -19,6 +20,7 @@ setGeneric("Impute", function(object, Param) {standardGeneric("Impute")})
 #'
 #' @import data.table StQ StQT
 #'
+#' @export
 setMethod(f = "Impute",
           signature = c("data.table", "MeanImputationParam"),
           function(object, Param){
