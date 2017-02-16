@@ -7,7 +7,7 @@ Authors@R: c(
     person("Elisa", "Esteban", email = "elisa.esteban.segurado@gmail.com", role = "aut"),
     person("Soledad", "Saldaña", email = "soledad.saldana.diaz@gmail.com", role = "aut"))
 Maintainer: David Salgado <david.salgado.fernandez@google.com>
-Description: Definition of an S4 class and methods to handle and compute the
+Description: Definition of S4 classes and methods to handle and compute the
     parameters of a continuous observation-prediction model under the optimization
     approach to selective editing
 Depends:

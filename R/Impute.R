@@ -18,7 +18,7 @@ setGeneric("Impute", function(object, Param) {standardGeneric("Impute")})
 #'
 #' @include MeanImputationParam-class.R
 #'
-#' @import data.table StQ StQT
+#' @import data.table StQ
 #'
 #' @export
 setMethod(f = "Impute",

@@ -25,5 +25,6 @@ Apply the imputation method to a data set
 }
 \examples{
 \dontrun{}
+
 }
 
