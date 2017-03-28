@@ -1,6 +1,7 @@
 Package: StQImputation
 Type: Package
-Title: Classes and methods to implement different imputation methods upon StQ objects
+Title: Classes and methods to implement different imputation methods upon StQ
+    objects
 Version: 0.0.1
 Authors@R: c(
     person("David", "Salgado", email = "david.salgado.fernandez@gmail.com", role = c("cre", "aut")),
@@ -21,6 +22,7 @@ License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 Collate:
+    'BenchImputationParam-class.R'
     'MeanImputationParam-class.R'
     'ImputationParam-class.R'
     'Impute.R'

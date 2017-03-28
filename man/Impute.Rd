@@ -3,12 +3,15 @@
 \docType{methods}
 \name{Impute}
 \alias{Impute}
+\alias{Impute,data.table,BenchImputationParam-method}
 \alias{Impute,data.table,MeanImputationParam-method}
 \title{Apply the imputation method to a data set}
 \usage{
 Impute(object, Param)
 
 \S4method{Impute}{data.table,MeanImputationParam}(object, Param)
+
+\S4method{Impute}{data.table,BenchImputationParam}(object, Param)
 }
 \arguments{
 \item{object}{Object containing the the data upon which the imputation is to be computed.}
@@ -24,7 +27,32 @@ according to the method specified in the input argument \code{Param}
 Apply the imputation method to a data set
 }
 \examples{
-\dontrun{}
+\dontrun{
+
+FF.StQList <- readRDS('../E30183.FF.StQList.rds')
+FF <- FF.StQList[["MM072016"]]
+
+ValToImpute <- dcast_StQ(FD, ExtractNames(c('CifraNeg_13.___', 'ActivEcono_35._4._2.1.4._0')))
+ValToImpute[sample(1:16941, floor(16941 / 5)), CifraNeg_13.___ := NA_real_]
+Units1 <- ValToImpute[, 'NOrden', with = FALSE]
+
+BenchValues <- dcast_StQ(FF, ExtractNames(c('CifraNeg_13.___', 'ActivEcono_35._4._2.1.4._0')))
+Units2 <- BenchValues[, 'NOrden', with = FALSE]
+Units <- merge(Units1, Units2)
+setkeyv(ValToImpute, 'NOrden')
+ValToImpute <- ValToImpute[NOrden \%chin\% Units[['NOrden']]]
+BenchValues <- BenchValues[, c('NOrden', 'CifraNeg_13.___', 'ActivEcono_35._4._2.1.4._0'), with = FALSE]
+setkeyv(BenchValues, 'NOrden')
+BenchValues <- BenchValues[NOrden \%chin\% Units[['NOrden']]]
+BenchValues[is.na(CifraNeg_13.___), CifraNeg_13.___ := mean(CifraNeg_13.___, na.rm = TRUE), by = 'ActivEcono_35._4._2.1.4._0']
+BenchValues[is.na(CifraNeg_13.___), CifraNeg_13.___ := mean(CifraNeg_13.___, na.rm = TRUE)]
+BenchValues <- BenchValues[, c('NOrden', 'CifraNeg_13.___'), with = F]
+BenchImpParam <- new(Class = 'BenchImputationParam',
+                     VarNames = 'CifraNeg_13.___',
+                     DomainNames = 'ActivEcono_35._4._2.1.4._0',
+                     BenchValues = BenchValues)
+Impute(ValToImpute, BenchImpParam)
+}
 
 }
 

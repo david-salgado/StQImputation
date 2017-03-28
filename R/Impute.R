@@ -9,16 +9,41 @@
 #' according to the method specified in the input argument \code{Param}
 #'
 #' @examples
-#' \dontrun{}
+#' \dontrun{
+#'
+#' FF.StQList <- readRDS('../E30183.FF.StQList.rds')
+#' FF <- FF.StQList[["MM072016"]]
+#'
+#' ValToImpute <- dcast_StQ(FD, ExtractNames(c('CifraNeg_13.___', 'ActivEcono_35._4._2.1.4._0')))
+#' ValToImpute[sample(1:16941, floor(16941 / 5)), CifraNeg_13.___ := NA_real_]
+#' Units1 <- ValToImpute[, 'NOrden', with = FALSE]
+#'
+#' BenchValues <- dcast_StQ(FF, ExtractNames(c('CifraNeg_13.___', 'ActivEcono_35._4._2.1.4._0')))
+#' Units2 <- BenchValues[, 'NOrden', with = FALSE]
+#' Units <- merge(Units1, Units2)
+#' setkeyv(ValToImpute, 'NOrden')
+#' ValToImpute <- ValToImpute[NOrden %chin% Units[['NOrden']]]
+#' BenchValues <- BenchValues[, c('NOrden', 'CifraNeg_13.___', 'ActivEcono_35._4._2.1.4._0'), with = FALSE]
+#' setkeyv(BenchValues, 'NOrden')
+#' BenchValues <- BenchValues[NOrden %chin% Units[['NOrden']]]
+#' BenchValues[is.na(CifraNeg_13.___), CifraNeg_13.___ := mean(CifraNeg_13.___, na.rm = TRUE), by = 'ActivEcono_35._4._2.1.4._0']
+#' BenchValues[is.na(CifraNeg_13.___), CifraNeg_13.___ := mean(CifraNeg_13.___, na.rm = TRUE)]
+#' BenchValues <- BenchValues[, c('NOrden', 'CifraNeg_13.___'), with = F]
+#' BenchImpParam <- new(Class = 'BenchImputationParam',
+#'                      VarNames = 'CifraNeg_13.___',
+#'                      DomainNames = 'ActivEcono_35._4._2.1.4._0',
+#'                      BenchValues = BenchValues)
+#' Impute(ValToImpute, BenchImpParam)
+#' }
+#'
+#' @include MeanImputationParam-class.R
+#'
+#' @import data.table StQ
 #'
 #' @export
 setGeneric("Impute", function(object, Param) {standardGeneric("Impute")})
 
 #' @rdname Impute
-#'
-#' @include MeanImputationParam-class.R
-#'
-#' @import data.table StQ
 #'
 #' @export
 setMethod(f = "Impute",
@@ -54,6 +79,71 @@ setMethod(f = "Impute",
                                   DomainNames = byVars[-length(byVars)])
                   output <- Impute(output, NewParam)
                 }
+
+            }
+
+            return(output[])
+          }
+)
+
+
+#' @rdname Impute
+#'
+#' @export
+setMethod(f = "Impute",
+          signature = c("data.table", "BenchImputationParam"),
+          function(object, Param){
+
+            BenchImp <- function(x, y){
+
+              if (all(is.na(x))) return(rep(NA_real_, length(x)))
+              output <- quantile(x, probs = ecdf(y)(y), na.rm = TRUE)
+              return(output)
+            }
+
+            ImputationVars <- Param@VarNames
+            byVars <- Param@DomainNames
+            output <- copy(object)
+            BenchValues <- copy(Param@BenchValues)
+            for (Var in ImputationVars){
+
+              if(any(is.na(BenchValues[[Var]]))) stop(paste0('[StQImputation::Impute] The slot BenchValues has missing values in the variable ', Var, '.\n'))
+
+            }
+            setnames(BenchValues, ImputationVars, paste0('Bench_', ImputationVars))
+            output <- merge(output, BenchValues, all.x = TRUE)
+
+            for (Var in ImputationVars){
+
+              if (length(byVars) != 0) {
+
+                output[, (paste0('Imp_', Var)) := BenchImp(get(Var), get(paste0('Bench_', Var))), by = byVars]
+
+              } else {
+
+                output[, (paste0('Imp_', Var)) := BenchImp(get(Var), get(paste0('Bench_', Var)))]
+
+              }
+              output[is.na(get(Var)), (Var) := get(paste0('Imp_', Var))]
+
+              if (all(is.na(output[[Var]]))) {
+
+                stop(paste0('[ImputationParam:: Impute] The variable ', Var, ' has all missing values. It is impossible to compute its benchmark ecdf.\n'))
+
+              }
+
+              output[, (paste0('Imp_', Var)) := NULL]
+              output[, (paste0('Bench_', Var)) := NULL]
+              setnames(BenchValues, paste0('Bench_', ImputationVars), ImputationVars)
+
+              if (length(byVars) != 0 && any(is.na(output[[Var]]))) {
+
+                NewParam <- new(Class = 'BenchImputationParam',
+                                VarNames = ImputationVars,
+                                DomainNames = byVars[-length(byVars)],
+                                BenchValues = BenchValues)
+                output <- Impute(output, NewParam)
+              }
 
             }
 
