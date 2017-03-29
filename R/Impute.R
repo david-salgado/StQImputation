@@ -103,25 +103,30 @@ setMethod(f = "Impute",
 
             ImputationVars <- Param@VarNames
             byVars <- Param@DomainNames
+            UnitVars <- Param@UnitNames
             output <- copy(object)
             BenchValues <- copy(Param@BenchValues)
-            for (Var in ImputationVars){
+            BenchVar <- setdiff(names(BenchValues), c(UnitVars, ImputationVars))
 
-              if(any(is.na(BenchValues[[Var]]))) stop(paste0('[StQImputation::Impute] The slot BenchValues has missing values in the variable ', Var, '.\n'))
+            if (length(BenchVar) > 1) stop('[StQImputation::Impute] There exist more than one benchmark variable.')
+            for (Var in BenchVar) {
+
+              if (any(is.na(BenchValues[[Var]]))) stop(paste0('[StQImputation::Impute] The slot BenchValues has missing values in the variable ', Var, '.\n'))
 
             }
-            setnames(BenchValues, ImputationVars, paste0('Bench_', ImputationVars))
+            setnames(BenchValues, BenchVar, paste0('Bench_', BenchVar))
+            BenchVar <- paste0('Bench_', BenchVar)
             output <- merge(output, BenchValues, all.x = TRUE)
 
-            for (Var in ImputationVars){
+            for (Var in ImputationVars) {
 
               if (length(byVars) != 0) {
 
-                output[, (paste0('Imp_', Var)) := BenchImp(get(Var), get(paste0('Bench_', Var))), by = byVars]
+                output[, (paste0('Imp_', Var)) := BenchImp(get(Var), get(BenchVar)), by = byVars]
 
               } else {
 
-                output[, (paste0('Imp_', Var)) := BenchImp(get(Var), get(paste0('Bench_', Var)))]
+                output[, (paste0('Imp_', Var)) := BenchImp(get(Var), get(BenchVar))]
 
               }
               output[is.na(get(Var)), (Var) := get(paste0('Imp_', Var))]
@@ -133,13 +138,11 @@ setMethod(f = "Impute",
               }
 
               output[, (paste0('Imp_', Var)) := NULL]
-              output[, (paste0('Bench_', Var)) := NULL]
-              setnames(BenchValues, paste0('Bench_', ImputationVars), ImputationVars)
 
               if (length(byVars) != 0 && any(is.na(output[[Var]]))) {
 
                 NewParam <- new(Class = 'BenchImputationParam',
-                                VarNames = ImputationVars,
+                                VarNames = Var,
                                 DomainNames = byVars[-length(byVars)],
                                 BenchValues = BenchValues)
                 output <- Impute(output, NewParam)

@@ -36,9 +36,11 @@
 setClass(Class = "BenchImputationParam",
          slots = c(VarNames = 'character',
                    DomainNames = 'character',
+                   UnitNames = 'character',
                    BenchValues = 'data.table'),
          prototype = list(VarNames = character(0),
                           DomainNames = character(0),
+                          UnitNames = character(0),
                           BenchValues = 'data.table'),
          validity = function(object){
 
