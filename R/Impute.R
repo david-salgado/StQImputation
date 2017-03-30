@@ -113,9 +113,16 @@ setMethod(f = "Impute",
 
             setnames(BenchValues, OrigBenchVar, paste0('Bench_', OrigBenchVar))
             BenchVar <- paste0('Bench_', OrigBenchVar)
-            output <- merge(output, BenchValues, all.x = TRUE)
+            output <- merge(output, BenchValues, all.x = TRUE, by = UnitVars)
 
             for (Var in ImputationVars) {
+
+              if (!BenchVar %in% names(output)) {
+
+                setnames(BenchValues, OrigBenchVar, paste0('Bench_', OrigBenchVar))
+                output <- merge(output, BenchValues, all.x = TRUE, by = UnitVars)
+
+              }
 
               if (length(byVars) != 0) {
 
@@ -150,6 +157,7 @@ setMethod(f = "Impute",
               }
             }
 
+            if (BenchVar %in% names(output)) output[, (BenchVar) := NULL]
             return(output[])
           }
 )
