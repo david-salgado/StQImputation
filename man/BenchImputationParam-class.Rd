@@ -19,6 +19,7 @@ which to compute the benchmark values quantiles.}
 \item{\code{BenchValues}}{\linkS4class{data.table} with the values of the benchmark variable used to
 compute the imputation values.}
 }}
+
 \examples{
 # An empty BenchImputationParam object:
 new(Class = 'BenchImputationParam')
@@ -42,4 +43,3 @@ BenchImpParam <- new(Class = 'BenchImputationParam',
 }
 
 }
-

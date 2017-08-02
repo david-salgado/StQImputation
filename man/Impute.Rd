@@ -3,8 +3,8 @@
 \docType{methods}
 \name{Impute}
 \alias{Impute}
-\alias{Impute,data.table,BenchImputationParam-method}
 \alias{Impute,data.table,MeanImputationParam-method}
+\alias{Impute,data.table,BenchImputationParam-method}
 \title{Apply the imputation method to a data set}
 \usage{
 Impute(object, Param)
@@ -55,4 +55,3 @@ Impute(ValToImpute, BenchImpParam)
 }
 
 }
-

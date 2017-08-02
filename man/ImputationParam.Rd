@@ -3,4 +3,3 @@
 \name{ImputationParam}
 \alias{ImputationParam}
 \title{Virtual S4 class to handle parameters for the imputation methods of missing values}
-

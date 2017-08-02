@@ -16,9 +16,9 @@ the mean imputation method of missing values.
 \item{\code{DomainNames}}{character vector with the names of the variables determining the domains over
 which to compute the mean.}
 }}
+
 \examples{
 # An empty MeanImputationParam object:
 new(Class = 'MeanImputationParam')
 
 }
-

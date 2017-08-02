@@ -21,9 +21,10 @@ Imports:
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Collate:
+Collate: 
     'BenchImputationParam-class.R'
     'MeanImputationParam-class.R'
     'ImputationParam-class.R'
     'Impute.R'
-RoxygenNote: 5.0.1
+    'setVarNames.R'
+RoxygenNote: 6.0.1
