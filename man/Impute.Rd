@@ -5,6 +5,7 @@
 \alias{Impute}
 \alias{Impute,data.table,MeanImputationParam-method}
 \alias{Impute,data.table,BenchImputationParam-method}
+\alias{Impute,data.table,MedianImputationParam-method}
 \title{Apply the imputation method to a data set}
 \usage{
 Impute(object, Param)
@@ -12,6 +13,8 @@ Impute(object, Param)
 \S4method{Impute}{data.table,MeanImputationParam}(object, Param)
 
 \S4method{Impute}{data.table,BenchImputationParam}(object, Param)
+
+\S4method{Impute}{data.table,MedianImputationParam}(object, Param)
 }
 \arguments{
 \item{object}{Object containing the the data upon which the imputation is to be computed.}

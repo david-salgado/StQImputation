@@ -64,6 +64,7 @@ setMethod(f = "Impute",
                 output[, (paste0('Mean_', Var)) := mean(get(Var), na.rm = TRUE)]
 
               }
+              
                 output[is.na(get(Var)), (Var) := get(paste0('Mean_', Var))]
 
                 if (all(is.na(output[[Var]]))) {
@@ -158,6 +159,51 @@ setMethod(f = "Impute",
             }
 
             if (BenchVar %in% names(output)) output[, (BenchVar) := NULL]
+            return(output[])
+          }
+)
+
+
+#' @rdname Impute
+#'
+#' @export
+setMethod(f = "Impute",
+          signature = c("data.table", "MedianImputationParam"),
+          function(object, Param){
+            
+            ImputationVars <- Param@VarNames
+            byVars <- Param@DomainNames
+            output <- copy(object)
+            for (Var in ImputationVars){
+              
+              if (length(byVars) != 0) {
+                
+                output[, (paste0('Median_', Var)) := median(get(Var), na.rm = TRUE), by = byVars]
+                
+              } else {
+                
+                output[, (paste0('Median_', Var)) := median(get(Var), na.rm = TRUE)]
+                
+              }
+              
+              output[is.na(get(Var)), (Var) := get(paste0('Median_', Var))]
+              
+              if (all(is.na(output[[Var]]))) {
+                
+                stop(paste0('[ImputationParam:: Impute] The variable ', Var, ' has all missing values. It is impossible to compute its median value.\n'))
+                
+              }
+              output[, (paste0('Median_', Var)) := NULL]
+              if (length(byVars) != 0 && any(is.na(output[[Var]]))) {
+                
+                NewParam <- new(Class = 'MedianImputationParam',
+                                VarNames = ImputationVars,
+                                DomainNames = byVars[-length(byVars)])
+                output <- Impute(output, NewParam)
+              }
+              
+            }
+            
             return(output[])
           }
 )
