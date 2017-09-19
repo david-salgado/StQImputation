@@ -2,7 +2,7 @@ Package: StQImputation
 Type: Package
 Title: Classes and methods to implement different imputation methods upon StQ
     objects
-Version: 0.0.2
+Version: 0.1.0
 Authors@R: c(
     person("David", "Salgado", email = "david.salgado.fernandez@gmail.com", role = c("cre", "aut")),
     person("Elisa", "Esteban", email = "elisa.esteban.segurado@gmail.com", role = "aut"),
@@ -23,6 +23,7 @@ Encoding: UTF-8
 LazyData: true
 Collate: 
     'BenchImputationParam-class.R'
+    'MedianImputationParam-class.R'
     'MeanImputationParam-class.R'
     'ImputationParam-class.R'
     'Impute.R'
