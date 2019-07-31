@@ -16,7 +16,9 @@ the benchmark variable(s) imputation method of missing values.
 \item{\code{DomainNames}}{character vector with the names of the variables determining the domains over
 which to compute the benchmark values quantiles.}
 
-\item{\code{BenchValues}}{\linkS4class{data.table} with the values of the benchmark variable used to
+\item{\code{UnitNames}}{character vector with the names of the identification variables.}
+
+\item{\code{BenchValues}}{\linkS4class{data.table} with the values of the benchmark variable(S) used to
 compute the imputation values.}
 }}
 

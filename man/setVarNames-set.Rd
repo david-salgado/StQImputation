@@ -7,8 +7,8 @@
 setVarNames(object) <- value
 }
 \arguments{
-\item{object}{Object \linkS4class{ImputationParam} whose component \code{VarNames}
-is to be assigned.}
+\item{object}{Object \linkS4class{ImputationParam} whose component \code{VarNames} is to be
+assigned.}
 
 \item{value}{character vector to be assigned to the component \code{VarNames}.}
 }

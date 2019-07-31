@@ -3,8 +3,8 @@
 #' @description \code{setVarNames} assigns a character value to the component \code{VarNames}  of
 #' the input object \linkS4class{ImputationParam}.
 #'
-#' @param object Object \linkS4class{ImputationParam} whose component \code{VarNames}
-#' is to be assigned.
+#' @param object Object \linkS4class{ImputationParam} whose component \code{VarNames} is to be
+#' assigned.
 #'
 #' @param value character vector to be assigned to the component \code{VarNames}.
 #'

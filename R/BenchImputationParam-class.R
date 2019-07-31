@@ -8,8 +8,11 @@
 #' @slot DomainNames  character vector with the names of the variables determining the domains over
 #' which to compute the benchmark values quantiles.
 #'
-#' @slot BenchValues \linkS4class{data.table} with the values of the benchmark variable used to
+#' @slot UnitNames character vector with the names of the identification variables.
+#' 
+#' @slot BenchValues \linkS4class{data.table} with the values of the benchmark variable(S) used to
 #' compute the imputation values.
+#' 
 #' @examples
 #' # An empty BenchImputationParam object:
 #' new(Class = 'BenchImputationParam')
